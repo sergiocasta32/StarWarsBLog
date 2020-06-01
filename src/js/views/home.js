@@ -1,15 +1,17 @@
 import React from "react";
-import rigoImage from "../../img/rigo-baby.jpg";
 import "../../styles/home.scss";
+import { CardPeople } from "../component/cardPeople";
+import { CardPlanets } from "../component/cardPlanets";
 
 export const Home = () => (
-	<div className="text-center mt-5">
-		<h1>Hello Rigo!</h1>
-		<p>
-			<img src={rigoImage} />
-		</p>
-		<a href="#" className="btn btn-success">
-			If you see this green button, bootstrap is working
-		</a>
+	<div className="container testimonial-group">
+		<h1>Characters</h1>
+		<div className="row">
+			<CardPeople />
+		</div>
+		<h1>Planets</h1>
+		<div className="row">
+			<CardPlanets />
+		</div>
 	</div>
 );
