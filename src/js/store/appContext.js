@@ -24,8 +24,6 @@ const injectContext = PassedComponent => {
 		useEffect(() => {
 			state.actions.loadSomePeople();
 			state.actions.loadSomePlanets();
-			state.actions.saveFavorites();
-			state.actions.deleteFav();
 
 			/**
 			 * EDIT THIS!

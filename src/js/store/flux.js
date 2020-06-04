@@ -1,3 +1,9 @@
+import { element } from "prop-types";
+import Swal from "sweetalert2";
+import "sweetalert2/src/sweetalert2.scss";
+
+const urlBase = "https://swapi.dev/api/";
+let result = [];
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -7,13 +13,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 			favorites: []
 		},
 		actions: {
-			loadSomePeople: () => {
+			loadDataSWapi: async (urlComplemento, section) => {
 				const store = getStore();
-				fetch("https://swapi.dev/api/people/")
-					.then(response => response.json())
-					.then(data => {
-						setStore({ people: data.results });
-					});
+				var urlNext = "1";
+				var page = "";
+				while (urlNext != null) {
+					let response = await fetch(urlBase + urlComplemento + "?" + page);
+					let data = await response.json();
+					if (data.next != null) {
+						page = data.next.split("?")[1];
+					}
+					urlNext = data.next;
+					result = store.people;
+					data.results.forEach(item => result.push(item));
+					setStore({ people: result });
+				}
+			},
+
+			loadSomePeople: () => {
+				const action = getActions();
+				action.loadDataSWapi("people/", "people");
 			},
 
 			loadSomePlanets: () => {
@@ -25,31 +44,78 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 			},
 
+			checkFavorites(favorite) {
+				favorite.target.state = favorite.target.value.trim().length ? "valid" : "invalid";
+			},
+
 			saveFavorites: name => {
 				const store = getStore();
-				setStore({ favorites: [...store.favorites, name] });
+				const action = getActions();
+
+				if (store.favorites.findIndex(element => name == element) == -1) {
+					setStore({ favorites: [...store.favorites, name] });
+					action.sweetFav();
+				} else {
+					alert("Ya se agregó a favoritos");
+				}
 			},
 
 			/*
-			saveFavorites: people => {
-				let store = getStore();
-				const temp = store.favorites.concat([people]);
-				setStore({
-					favorites: temp
-				});
-            },
+                saveFavorites: name => {
+				const store = getStore();
+
+				if (store.favorites.findIndex(element => name == element) == -1) {
+					setStore({ favorites: [...store.favorites, name] });
+					alert("Se ha guardado a favoritos");
+				} else {
+					alert("Ya se agregó a favoritos");
+				}
+			},
             */
 
-			savePlanets: planet => {
+			//this.state.animals.find(ani => ani !== animal )
+
+			/*
+			
+			saveFavorites: name => {
+				const store = getStore();
+				if (store.favorites.lenght < 1) {
+					setStore({ favorites: [...store.favorites, name] });
+				} else {
+					const checkDuplicate = store.favorites.map(item => {
+						return Object.values(item)[0];
+					});
+					if (!checkDuplicate.includes(Object.values(name)[0])) {
+						setStore({ favorites: [...store.favorites, name] });
+					}
+				}
+			},
+            */ savePlanets: planet => {
 				const store = getStore();
 				setStore({ favorites: [...store.favorites, planet] });
 			},
+			sweetDelete() {
+				Swal.fire({
+					type: "error",
+					title: "Oops...",
+					text: "Se ha eliminado de favoritos"
+				});
+			},
+			sweetFav() {
+				Swal.fire({
+					type: "success",
+					title: "Wiiii...",
+					text: "Se ha añadido a favoritos"
+				});
+			},
 			deleteFav: i => {
+				const action = getActions();
 				const store = getStore();
 				const favorites = store.favorites.filter((item, index) => {
 					return i !== index;
 				});
 				setStore({ favorites: [...favorites] });
+				action.sweetDelete();
 			},
 
 			changeColor: (index, color) => {

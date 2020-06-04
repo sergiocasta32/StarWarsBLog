@@ -5,14 +5,15 @@ import { Link } from "react-router-dom";
 
 export const CardPeople = () => {
 	const { store, actions } = useContext(Context);
+
 	return (
-		<>
+		<div className="overflow-auto d-flex">
 			{store.people.map((item, index) => {
 				return (
 					<div key={index} className="col-4">
 						<div className="card" style={{ width: "18rem" }}>
 							<Link to={`/detailCardPeople/${index}`}>
-								/<button>Link to: {item.title}</button>
+								<button>Link to: {item.title}</button>
 							</Link>
 							<img
 								className="card-img-top"
@@ -35,6 +36,6 @@ export const CardPeople = () => {
 					</div>
 				);
 			})}
-		</>
+		</div>
 	);
 };
