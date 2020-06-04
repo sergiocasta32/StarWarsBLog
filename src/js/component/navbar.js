@@ -31,11 +31,11 @@ export const Navbar = () => {
 						<ul>
 							{store.favorites.map((item, index) => {
 								return (
-									<li key={index} className="dropdown-item" href="#">
+									<li key={index} className="dropit dropdown-item" href="#">
 										{item}{" "}
 										<button
 											onClick={() => actions.deleteFav(index)}
-											className="float-right  btn btn-danger">
+											className="btndelete float-right btn-xs btn btn-danger py-0">
 											X
 										</button>
 									</li>

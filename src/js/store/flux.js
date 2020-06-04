@@ -97,6 +97,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			sweetDelete() {
 				Swal.fire({
 					type: "error",
+					icon: "error",
 					title: "Oops...",
 					text: "Se ha eliminado de favoritos"
 				});
@@ -104,6 +105,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			sweetFav() {
 				Swal.fire({
 					type: "success",
+					icon: "success",
 					title: "Wiiii...",
 					text: "Se ha añadido a favoritos"
 				});
