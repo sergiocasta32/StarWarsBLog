@@ -24,9 +24,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 						page = data.next.split("?")[1];
 					}
 					urlNext = data.next;
-					result = store.people;
+
+					/*
+					switch (section) {
+						case people:
+							result = store[section];
+							data.results.forEach(item => result.push(item));
+							setStore({ people: result });
+
+							break;
+
+						case planets:
+							result = store[section];
+							data.results.forEach(item => result.push(item));
+							setStore({ planets: result });
+
+							break;
+
+						default:
+							break;
+                    }
+                    */
+
+					result = store[section];
 					data.results.forEach(item => result.push(item));
-					setStore({ people: result });
+					setStore({ section: result });
 				}
 			},
 
@@ -36,13 +58,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			loadSomePlanets: () => {
-				const store = getStore();
+				const action = getActions();
+				action.loadDataSWapi("planets/", "planets");
+				/*
 				fetch("https://swapi.dev/api/planets/")
 					.then(response => response.json())
 					.then(data => {
 						setStore({ planets: data.results });
-					});
+                    });*/
 			},
+
+			/*
 
 			checkFavorites(favorite) {
 				favorite.target.state = favorite.target.value.trim().length ? "valid" : "invalid";
@@ -56,7 +82,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ favorites: [...store.favorites, name] });
 					action.sweetFav();
 				} else {
-					alert("Ya se agregó a favoritos");
+					action.sweetFavRep();
 				}
 			},
 
@@ -75,8 +101,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//this.state.animals.find(ani => ani !== animal )
 
+			saveFavorites: name => {
+				const store = getStore();
+				const action = getActions();
+
+				if (store.favorites.findIndex(element => name == element) == -1) {
+					setStore({ favorites: [...store.favorites, name] });
+					action.sweetFav();
+				} else {
+					action.sweetFavRep();
+				}
+			},
+
 			/*
-			
 			saveFavorites: name => {
 				const store = getStore();
 				if (store.favorites.lenght < 1) {
@@ -89,8 +126,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						setStore({ favorites: [...store.favorites, name] });
 					}
 				}
-			},
-            */ savePlanets: planet => {
+            },
+            */
+			savePlanets: planet => {
 				const store = getStore();
 				setStore({ favorites: [...store.favorites, planet] });
 			},
@@ -108,6 +146,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					icon: "success",
 					title: "Wiiii...",
 					text: "Se ha añadido a favoritos"
+				});
+			},
+			sweetFavRep() {
+				Swal.fire({
+					type: "warning",
+					icon: "warning",
+					title: "Wiiii...",
+					text: "Ya se encuentra en favoritos"
 				});
 			},
 			deleteFav: i => {

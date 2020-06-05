@@ -28,7 +28,7 @@ export const Navbar = () => {
 				</button>
 				<div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
 					<>
-						<ul>
+						<ul className="w-50">
 							{store.favorites.map((item, index) => {
 								return (
 									<li key={index} className="dropit dropdown-item" href="#">

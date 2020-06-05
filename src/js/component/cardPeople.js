@@ -44,12 +44,11 @@ export const CardPeople = () => {
 								<p className="card-text">Gender: {item.gender}</p>
 								<p>Height: {item.height}</p>
 								<p>Mass: {item.mass}</p>
-								<button
-									href="#"
-									className="btn savebtn btn-info"
-									onClick={() => actions.saveFavorites(item.name)}>
-									save
-								</button>
+								<i
+									className="far fa-heart"
+									onClick={() => actions.saveFavorites(item.name)}
+									style={{ fontSize: "2rem" }}
+								/>
 							</div>
 						</div>
 					</div>
