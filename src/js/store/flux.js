@@ -108,6 +108,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (store.favorites.findIndex(element => name == element) == -1) {
 					setStore({ favorites: [...store.favorites, name] });
 					action.sweetFav();
+					document.getElementById("likeIcon").className = "fas fa-heart";
+					document.getElementById("likeIcon").style.color = "red";
 				} else {
 					action.sweetFavRep();
 				}
@@ -164,6 +166,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				setStore({ favorites: [...favorites] });
 				action.sweetDelete();
+				document.getElementById("likeIcon").className = "far fa-heart";
+				document.getElementById("likeIcon").style.color = "initial";
 			},
 
 			changeColor: (index, color) => {

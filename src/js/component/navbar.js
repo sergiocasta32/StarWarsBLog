@@ -26,16 +26,16 @@ export const Navbar = () => {
 					aria-expanded="false">
 					Favorites
 				</button>
-				<div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+				<div className="dropdown-menu ml-auto" aria-labelledby="dropdownMenuLink">
 					<>
-						<ul className="w-50">
+						<ul className="w-25">
 							{store.favorites.map((item, index) => {
 								return (
 									<li key={index} className="dropit dropdown-item" href="#">
 										{item}{" "}
 										<button
 											onClick={() => actions.deleteFav(index)}
-											className="btndelete float-right btn-xs btn btn-danger py-0">
+											className="btndelete pull-right btn-xs btn btn-danger py-0">
 											X
 										</button>
 									</li>

@@ -46,6 +46,7 @@ export const CardPeople = () => {
 								<p>Mass: {item.mass}</p>
 								<i
 									className="far fa-heart"
+									id="likeIcon"
 									onClick={() => actions.saveFavorites(item.name)}
 									style={{ fontSize: "2rem" }}
 								/>
@@ -57,3 +58,4 @@ export const CardPeople = () => {
 		</div>
 	);
 };
+// <i class="fas fa-heart"></i>
