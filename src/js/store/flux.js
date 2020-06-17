@@ -47,7 +47,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     */
 
 					result = store[section];
-					data.results.forEach(item => result.push(item));
+					data.results.forEach(item => result.push({ ...item, isfav: false })); // Agregamos isfav a people&planets para cambiar el icono de fav
 					setStore({ section: result });
 				}
 			},
@@ -101,18 +101,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//this.state.animals.find(ani => ani !== animal )
 
-			saveFavorites: name => {
+			saveFavorites: index => {
 				const store = getStore();
 				const action = getActions();
-
-				if (store.favorites.findIndex(element => name == element) == -1) {
-					setStore({ favorites: [...store.favorites, name] });
+				var arrayPeople = store.people;
+				if (arrayPeople[index].isfav) {
+					arrayPeople[index] = { ...arrayPeople[index], isfav: false };
+					setStore({ people: arrayPeople });
+					action.deleteFav(index);
+					action.sweetFavRep();
+				} else {
+					arrayPeople[index] = { ...arrayPeople[index], isfav: true };
+					setStore({ people: arrayPeople });
+					setStore({ favorites: [...store.favorites, arrayPeople[index].name] });
 					action.sweetFav();
-					document.getElementById("likeIcon").className = "fas fa-heart";
-					document.getElementById("likeIcon").style.color = "red";
+				}
+				/*
+				if (store.favorites.findIndex(element => name == element) == -1) {
+					setStore({ favorites: [...store.favorites, index] });
+					action.sweetFav();
+					
 				} else {
 					action.sweetFavRep();
-				}
+                }
+                */
 			},
 
 			/*
@@ -161,28 +173,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			deleteFav: i => {
 				const action = getActions();
 				const store = getStore();
+				var arrayPeople = store.people;
 				const favorites = store.favorites.filter((item, index) => {
 					return i !== index;
 				});
 				setStore({ favorites: [...favorites] });
+				arrayPeople[i] = { ...arrayPeople[i], isfav: false };
+				setStore({ people: arrayPeople });
 				action.sweetDelete();
-				document.getElementById("likeIcon").className = "far fa-heart";
-				document.getElementById("likeIcon").style.color = "initial";
-			},
-
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
 			}
 		}
 	};

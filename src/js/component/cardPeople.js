@@ -44,12 +44,21 @@ export const CardPeople = () => {
 								<p className="card-text">Gender: {item.gender}</p>
 								<p>Height: {item.height}</p>
 								<p>Mass: {item.mass}</p>
-								<i
-									className="far fa-heart"
-									id="likeIcon"
-									onClick={() => actions.saveFavorites(item.name)}
-									style={{ fontSize: "2rem" }}
-								/>
+								{item.isfav ? (
+									<i
+										className="fas fa-heart"
+										id="likeIcon"
+										onClick={() => actions.saveFavorites(index)}
+										style={{ fontSize: "2rem" }}
+									/>
+								) : (
+									<i
+										className="far fa-heart"
+										id="likeIcon"
+										onClick={() => actions.saveFavorites(index)}
+										style={{ fontSize: "2rem" }}
+									/>
+								)}
 							</div>
 						</div>
 					</div>
