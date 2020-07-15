@@ -10,56 +10,46 @@ const getState = ({ getStore, getActions, setStore }) => {
 			demo: [],
 			people: [],
 			planets: [],
+			peopleNext: [],
+			planetsNext: [],
 			favorites: []
 		},
 		actions: {
-			loadDataSWapi: async (urlComplemento, section) => {
-				const store = getStore();
-				var urlNext = "1";
-				var page = "";
-				while (urlNext != null) {
-					let response = await fetch(urlBase + urlComplemento + "?" + page);
-					let data = await response.json();
-					if (data.next != null) {
-						page = data.next.split("?")[1];
-					}
-					urlNext = data.next;
-
-					/*
-					switch (section) {
-						case people:
-							result = store[section];
-							data.results.forEach(item => result.push(item));
-							setStore({ people: result });
-
-							break;
-
-						case planets:
-							result = store[section];
-							data.results.forEach(item => result.push(item));
-							setStore({ planets: result });
-
-							break;
-
-						default:
-							break;
-                    }
-                    */
-
-					result = store[section];
-					data.results.forEach(item => result.push({ ...item, isfav: false })); // Agregamos isfav a people&planets para cambiar el icono de fav
-					setStore({ section: result });
-				}
+			getData: (name, pageNumber = 1) => {
+				let url = "https://swapi.dev/api/" + name + "/?page=" + pageNumber;
+				const currentStore = getStore();
+				let nameNext = name + "Next";
+				fetch(url)
+					.then(res => res.json())
+					.then(result => {
+						let itemList = [];
+						if (name in currentStore) {
+							itemList = currentStore[name];
+							//console.log(itemList);
+						}
+						for (let item of result.results) {
+							// console.log(`this is item.url: ${item.url}`);
+							let itemId = item.url.match(/[/][0-9]+[/]/)[0].replace(/[/]/g, "");
+							// console.log(`this is itemId: ${itemId}`);
+							item.id = itemId;
+							itemList.push(item);
+						}
+						setStore({
+							[name]: itemList,
+							[nameNext]: result.next.split("=")[1]
+						});
+					})
+					.catch(e => console.error(e));
 			},
 
 			loadSomePeople: () => {
 				const action = getActions();
-				action.loadDataSWapi("people/", "people");
+				action.getData("people");
 			},
 
 			loadSomePlanets: () => {
 				const action = getActions();
-				action.loadDataSWapi("planets/", "planets");
+				action.getData("planets");
 				/*
 				fetch("https://swapi.dev/api/planets/")
 					.then(response => response.json())

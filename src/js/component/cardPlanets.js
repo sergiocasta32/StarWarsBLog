@@ -32,6 +32,15 @@ export const CardPlanets = () => {
 					</div>
 				);
 			})}
+			<button
+				className="btn btn-success"
+				type="button"
+				onClick={e => {
+					console.log("clicked for nextPlanets: ", store.planetsNext);
+					actions.getData("planets", store.planetsNext);
+				}}>
+				{"Show more results!"}
+			</button>
 		</>
 	);
 };
