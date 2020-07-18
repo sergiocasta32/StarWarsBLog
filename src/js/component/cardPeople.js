@@ -48,14 +48,14 @@ export const CardPeople = () => {
 									<i
 										className="fas fa-heart"
 										id="likeIcon"
-										onClick={() => actions.saveFavorites(index)}
+										onClick={() => actions.saveFavorites(index, "people")}
 										style={{ fontSize: "2rem" }}
 									/>
 								) : (
 									<i
 										className="far fa-heart"
 										id="likeIcon"
-										onClick={() => actions.saveFavorites(index)}
+										onClick={() => actions.saveFavorites(index, "people")}
 										style={{ fontSize: "2rem" }}
 									/>
 								)}

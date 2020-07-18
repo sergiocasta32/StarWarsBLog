@@ -91,7 +91,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//this.state.animals.find(ani => ani !== animal )
 
-			saveFavorites: index => {
+			/*saveFavorites: index => {
 				const store = getStore();
 				const action = getActions();
 				var arrayPeople = store.people;
@@ -114,7 +114,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} else {
 					action.sweetFavRep();
                 }
-                */
+                
+			},*/
+
+			saveFavorites: (index, category) => {
+				const store = getStore();
+				const action = getActions();
+				var arrayCategory = store[category];
+				if (arrayCategory[index].isfav) {
+					arrayCategory[index] = { ...arrayCategory[index], isfav: false };
+					setStore({ [category]: arrayCategory });
+					action.deleteFav(index);
+					action.sweetFavRep();
+				} else {
+					arrayCategory[index] = { ...arrayCategory[index], isfav: true };
+					setStore({ [category]: arrayCategory });
+					setStore({ favorites: [...store.favorites, arrayCategory[index].name] });
+					action.sweetFav();
+				}
 			},
 
 			/*
@@ -160,16 +177,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					text: "Ya se encuentra en favoritos"
 				});
 			},
-			deleteFav: i => {
+			deleteFav: (i, category) => {
 				const action = getActions();
 				const store = getStore();
-				var arrayPeople = store.people;
+				var arrayCategory = store[category];
 				const favorites = store.favorites.filter((item, index) => {
 					return i !== index;
 				});
 				setStore({ favorites: [...favorites] });
-				arrayPeople[i] = { ...arrayPeople[i], isfav: false };
-				setStore({ people: arrayPeople });
+				arrayCategory[i] = { ...arrayCategory[i], isfav: false };
+				setStore({ [category]: arrayCategory });
 				action.sweetDelete();
 			}
 		}

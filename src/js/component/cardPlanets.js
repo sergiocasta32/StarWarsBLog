@@ -45,14 +45,14 @@ export const CardPlanets = () => {
 									<i
 										className="fas fa-heart"
 										id="likeIcon"
-										onClick={() => actions.saveFavorites(index)}
+										onClick={() => actions.saveFavorites(index, "planets")}
 										style={{ fontSize: "2rem" }}
 									/>
 								) : (
 									<i
 										className="far fa-heart"
 										id="likeIcon"
-										onClick={() => actions.saveFavorites(index)}
+										onClick={() => actions.saveFavorites(index, "planets")}
 										style={{ fontSize: "2rem" }}
 									/>
 								)}
