@@ -120,18 +120,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 			saveFavorites: (index, category) => {
 				const store = getStore();
 				const action = getActions();
+				console.log("Viene category??    :" + category);
 				var arrayCategory = store[category];
+				console.log("po que si? :" + arrayCategory[index]);
 				if (arrayCategory[index].isfav) {
-					arrayCategory[index] = { ...arrayCategory[index], isfav: false };
-					setStore({ [category]: arrayCategory });
-					action.deleteFav(index);
+					action.deleteFav(index, category);
 					action.sweetFavRep();
 				} else {
 					arrayCategory[index] = { ...arrayCategory[index], isfav: true };
-					setStore({ [category]: arrayCategory });
+					//setStore({ category: { ...category[index], isfav: true }});
+					//setStore({ [category]: arrayCategory });
 					setStore({ favorites: [...store.favorites, arrayCategory[index].name] });
 					action.sweetFav();
 				}
+			},
+
+			deleteFav: (index, category) => {
+				const store = getStore();
+				const action = getActions();
+				//console.log("Viene category delete??    :" + category);
+				var arrayCategory = store[category];
+				//console.log("po que no?    :" + arrayCategory1);
+				//console.log("blablabla    :" + favorites);
+				arrayCategory[index] = { ...arrayCategory[index], isfav: false };
+
+				//console.log("blablabla1    :" + favorites);
+				//arrayCategory1[i] = { ...arrayCategory1[i], isfav: false };
+				//console.log("blablabla2    :" + arrayCategory1[i]);
+				setStore({ [category]: arrayCategory });
+				action.sweetDelete();
 			},
 
 			/*
@@ -176,18 +193,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					title: "Wiiii...",
 					text: "Ya se encuentra en favoritos"
 				});
-			},
-			deleteFav: (i, category) => {
-				const action = getActions();
-				const store = getStore();
-				var arrayCategory = store[category];
-				const favorites = store.favorites.filter((item, index) => {
-					return i !== index;
-				});
-				setStore({ favorites: [...favorites] });
-				arrayCategory[i] = { ...arrayCategory[i], isfav: false };
-				setStore({ [category]: arrayCategory });
-				action.sweetDelete();
 			}
 		}
 	};

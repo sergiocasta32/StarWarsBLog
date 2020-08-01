@@ -29,17 +29,33 @@ export const Navbar = () => {
 				<div className="dropdown-menu ml-auto" aria-labelledby="dropdownMenuLink">
 					<>
 						<ul className="w-25">
-							{store.favorites.map((item, index) => {
-								return (
-									<li key={index} className="dropit dropdown-item" href="#">
-										{item}{" "}
-										<button
-											onClick={() => actions.deleteFav(index)}
-											className="btndelete pull-right btn-xs btn btn-danger py-0">
-											X
-										</button>
-									</li>
-								);
+							{store.people.map((person, index) => {
+								if (person.isfav) {
+									return (
+										<li key={index} className="dropit dropdown-item" href="#">
+											{person.name}{" "}
+											<button
+												onClick={() => actions.deleteFav(index, "people")}
+												className="btndelete pull-right btn-xs btn btn-danger py-0">
+												X
+											</button>
+										</li>
+									);
+								}
+							})}
+							{store.planets.map((planet, index) => {
+								if (planet.isfav) {
+									return (
+										<li key={index} className="dropit dropdown-item" href="#">
+											{planet.name}{" "}
+											<button
+												onClick={() => actions.deleteFav(index, "planets")}
+												className="btndelete pull-right btn-xs btn btn-danger py-0">
+												X
+											</button>
+										</li>
+									);
+								}
 							})}
 						</ul>
 					</>
