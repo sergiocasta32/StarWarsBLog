@@ -7,7 +7,7 @@ export const CardPeople = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div className="cardpeople overflow-auto d-flex">
+		<>
 			{store.people.map((item, index) => {
 				return (
 					<div key={index} className="col-4">
@@ -48,14 +48,14 @@ export const CardPeople = () => {
 									<i
 										className="fas fa-heart"
 										id="likeIcon"
-										onClick={() => actions.saveFavorites(index)}
+										onClick={() => actions.saveFavorites(index, "people")}
 										style={{ fontSize: "2rem" }}
 									/>
 								) : (
 									<i
 										className="far fa-heart"
 										id="likeIcon"
-										onClick={() => actions.saveFavorites(index)}
+										onClick={() => actions.saveFavorites(index, "people")}
 										style={{ fontSize: "2rem" }}
 									/>
 								)}
@@ -64,7 +64,16 @@ export const CardPeople = () => {
 					</div>
 				);
 			})}
-		</div>
+			<button
+				className="btn btn-success"
+				type="button"
+				onClick={e => {
+					console.log("clicked for nextPeople: ", store.peopleNext);
+					actions.getData("people", store.peopleNext);
+				}}>
+				{"Show more results!"}
+			</button>
+		</>
 	);
 };
 // <i class="fas fa-heart"></i>

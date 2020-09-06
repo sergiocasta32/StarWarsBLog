@@ -10,56 +10,46 @@ const getState = ({ getStore, getActions, setStore }) => {
 			demo: [],
 			people: [],
 			planets: [],
+			peopleNext: [],
+			planetsNext: [],
 			favorites: []
 		},
 		actions: {
-			loadDataSWapi: async (urlComplemento, section) => {
-				const store = getStore();
-				var urlNext = "1";
-				var page = "";
-				while (urlNext != null) {
-					let response = await fetch(urlBase + urlComplemento + "?" + page);
-					let data = await response.json();
-					if (data.next != null) {
-						page = data.next.split("?")[1];
-					}
-					urlNext = data.next;
-
-					/*
-					switch (section) {
-						case people:
-							result = store[section];
-							data.results.forEach(item => result.push(item));
-							setStore({ people: result });
-
-							break;
-
-						case planets:
-							result = store[section];
-							data.results.forEach(item => result.push(item));
-							setStore({ planets: result });
-
-							break;
-
-						default:
-							break;
-                    }
-                    */
-
-					result = store[section];
-					data.results.forEach(item => result.push({ ...item, isfav: false })); // Agregamos isfav a people&planets para cambiar el icono de fav
-					setStore({ section: result });
-				}
+			getData: (name, pageNumber = 1) => {
+				let url = "https://swapi.dev/api/" + name + "/?page=" + pageNumber;
+				const currentStore = getStore();
+				let nameNext = name + "Next";
+				fetch(url)
+					.then(res => res.json())
+					.then(result => {
+						let itemList = [];
+						if (name in currentStore) {
+							itemList = currentStore[name];
+							//console.log(itemList);
+						}
+						for (let item of result.results) {
+							// console.log(`this is item.url: ${item.url}`);
+							let itemId = item.url.match(/[/][0-9]+[/]/)[0].replace(/[/]/g, "");
+							// console.log(`this is itemId: ${itemId}`);
+							item.id = itemId;
+							itemList.push(item);
+						}
+						setStore({
+							[name]: itemList,
+							[nameNext]: result.next.split("=")[1]
+						});
+					})
+					.catch(e => console.error(e));
 			},
 
 			loadSomePeople: () => {
 				const action = getActions();
-				action.loadDataSWapi("people/", "people");
+				action.getData("people");
 			},
 
 			loadSomePlanets: () => {
 				const action = getActions();
-				action.loadDataSWapi("planets/", "planets");
+				action.getData("planets");
 				/*
 				fetch("https://swapi.dev/api/planets/")
 					.then(response => response.json())
@@ -101,7 +91,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//this.state.animals.find(ani => ani !== animal )
 
-			saveFavorites: index => {
+			/*saveFavorites: index => {
 				const store = getStore();
 				const action = getActions();
 				var arrayPeople = store.people;
@@ -124,7 +114,41 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} else {
 					action.sweetFavRep();
                 }
-                */
+                
+			},*/
+
+			saveFavorites: (index, category) => {
+				const store = getStore();
+				const action = getActions();
+				console.log("Viene category??    :" + category);
+				var arrayCategory = store[category];
+				console.log("po que si? :" + arrayCategory[index]);
+				if (arrayCategory[index].isfav) {
+					action.deleteFav(index, category);
+					action.sweetFavRep();
+				} else {
+					arrayCategory[index] = { ...arrayCategory[index], isfav: true };
+					//setStore({ category: { ...category[index], isfav: true }});
+					//setStore({ [category]: arrayCategory });
+					setStore({ favorites: [...store.favorites, arrayCategory[index].name] });
+					action.sweetFav();
+				}
+			},
+
+			deleteFav: (index, category) => {
+				const store = getStore();
+				const action = getActions();
+				//console.log("Viene category delete??    :" + category);
+				var arrayCategory = store[category];
+				//console.log("po que no?    :" + arrayCategory1);
+				//console.log("blablabla    :" + favorites);
+				arrayCategory[index] = { ...arrayCategory[index], isfav: false };
+
+				//console.log("blablabla1    :" + favorites);
+				//arrayCategory1[i] = { ...arrayCategory1[i], isfav: false };
+				//console.log("blablabla2    :" + arrayCategory1[i]);
+				setStore({ [category]: arrayCategory });
+				action.sweetDelete();
 			},
 
 			/*
@@ -169,18 +193,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					title: "Wiiii...",
 					text: "Ya se encuentra en favoritos"
 				});
-			},
-			deleteFav: i => {
-				const action = getActions();
-				const store = getStore();
-				var arrayPeople = store.people;
-				const favorites = store.favorites.filter((item, index) => {
-					return i !== index;
-				});
-				setStore({ favorites: [...favorites] });
-				arrayPeople[i] = { ...arrayPeople[i], isfav: false };
-				setStore({ people: arrayPeople });
-				action.sweetDelete();
 			}
 		}
 	};
