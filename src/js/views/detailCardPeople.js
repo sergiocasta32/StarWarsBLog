@@ -7,7 +7,7 @@ export const DetailCardPeople = props => {
 	const { store, actions } = useContext(Context);
 	return (
 		<div>
-			<div className="card-deck col-3 h-100 mb-2 text-center">
+			<div className="card-deck col-3 h-100 mb-3 text-center">
 				<div className="card" style={{ width: "18rem" }}>
 					<img
 						className="card-img-top"
